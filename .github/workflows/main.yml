@@ -1,17 +1,14 @@
 ---
 name: Test OIDC Debugger
 on:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
-
 jobs:
   test:
     permissions:
       contents: read
       id-token: write
     runs-on: ubuntu-latest
+    environment: secure
     steps:
       - name: git checkout
         uses: actions/checkout@v4
