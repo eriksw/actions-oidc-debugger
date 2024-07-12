@@ -2,7 +2,7 @@
 name: Test OIDC Debugger
 on:
   workflow_dispatch:
-  pr:
+  pull_request:
   push:
     branches:
       - main
