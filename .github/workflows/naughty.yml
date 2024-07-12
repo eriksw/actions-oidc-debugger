@@ -1,0 +1,32 @@
+---
+name: Naughty Test
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: run oidc-debug.go
+        run: go run cmd/oidc-debug.go -audience "https://iam.googleapis.com/projects/333517648566/locations/global/workloadIdentityPools/github/providers/environment"
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: 'sbx-202312-sre-8b67'
+          workload_identity_provider: 'projects/333517648566/locations/global/workloadIdentityPools/github/providers/environment'
+          service_account: 'wif-test-erik@sbx-202312-sre-8b67.iam.gserviceaccount.com'
+          id_token_include_email: true
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+      - name: 'List bucket'
+        run: gcloud storage ls gs://wif-test-sdnfjksdfnsw
