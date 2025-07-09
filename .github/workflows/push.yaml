@@ -6,7 +6,7 @@ on:
       - main
 env:
   PROJECT_ID: 'sbx-202312-sre-8b67'
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/333517648566/locations/global/workloadIdentityPools/github/providers/environment'
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/333517648566/locations/global/workloadIdentityPools/github/providers/github'
   SERVICE_ACCOUNT: 'wif-test-erik@sbx-202312-sre-8b67.iam.gserviceaccount.com'
 jobs:
   no-env:
