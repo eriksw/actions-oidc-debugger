@@ -1,0 +1,58 @@
+---
+name: Dispatch
+on:
+  workflow_dispatch:
+env:
+  PROJECT_ID: 'sbx-202312-sre-8b67'
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/333517648566/locations/global/workloadIdentityPools/github/providers/github'
+  SERVICE_ACCOUNT: 'wif-test-erik@sbx-202312-sre-8b67.iam.gserviceaccount.com'
+jobs:
+  no-env:
+    name: 'Dispatch (No Environment)'
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: run oidc-debug.go
+        run: go run cmd/oidc-debug.go -audience "https://iam.googleapis.com/${{ env.WORKLOAD_IDENTITY_PROVIDER }}"
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          id_token_include_email: true
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+      - name: 'List bucket'
+        run: gcloud storage ls gs://wif-test-sdnfjksdfnsw
+  with-env:
+    name: 'Dispatch (Environment)'
+    environment: secure
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: run oidc-debug.go
+        run: go run cmd/oidc-debug.go -audience "https://iam.googleapis.com/${{ env.WORKLOAD_IDENTITY_PROVIDER }}"
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          id_token_include_email: true
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+      - name: 'List bucket'
+        run: gcloud storage ls gs://wif-test-sdnfjksdfnsw
