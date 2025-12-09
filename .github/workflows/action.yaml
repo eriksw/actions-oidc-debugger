@@ -1,0 +1,15 @@
+---
+name: Action Branch
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - action
+  push:
+    branches:
+      - action
+jobs:
+  manual:
+    uses: eriksw/actions-oidc-debugger/.github/workflows/call.yaml@action
+    with:
+      audience: "https://foo.bar.local"

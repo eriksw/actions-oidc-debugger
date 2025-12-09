@@ -1,0 +1,23 @@
+---
+name: Debug OIDC
+on:
+  workflow_call:
+    inputs:
+      audience:
+        type: string
+        required: true
+jobs:
+  debug_call:
+    name: 'Debug Call'
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: run oidc-debug.go
+        run: go run cmd/oidc-debug.go -audience "${{ inputs.audience }}"
